@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: springboot--authority
+server:
+  port: 12112
+
+jwt:
+  expire: 600000    #∫¡√Î
+  secret: CXtGp#cWJNh&LC4#
+  tokenHeader: Authorization
+  aesSecret: PlqXeEOah7l@1W*^
