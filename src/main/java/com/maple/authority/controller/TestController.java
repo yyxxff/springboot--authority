@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TestController {
 
-    @GetMapping("/test")
+    @GetMapping("/auth/login")
     public ResultBean<String> testResultBean() {
         String result = "这是一个测试";
         return ResultBean.getInstance().success(result);
     }
 
-    @GetMapping("/test2")
+    @GetMapping("/auth/test2")
     public ResultBean<Integer> testResultBean2() {
         Integer result = 1;
         return ResultBean.getInstance().error(result);
