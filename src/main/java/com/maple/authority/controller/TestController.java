@@ -22,7 +22,7 @@ public class TestController {
     @GetMapping("/test3")
     public ResultBean<String> testResultBean3() {
         String result = "这是一个测试3";
-        return ResultBean.getInstance().putCode(1003);
+        return ResultBean.getInstance().putCode(1003).putResult(result);
     }
 
     @GetMapping("/test4")

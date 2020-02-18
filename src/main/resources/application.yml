@@ -5,7 +5,7 @@ server:
   port: 12112
 
 jwt:
-  expire: 600000    #ºÁÃë
+  expire: 600000    #æ¯«ç§’
   secret: CXtGp#cWJNh&LC4#
   tokenHeader: Authorization
   aesSecret: PlqXeEOah7l@1W*^
