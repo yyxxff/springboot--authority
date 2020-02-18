@@ -21,10 +21,17 @@ import static com.maple.authority.configuration.BeanInitConfig.jwtProperties;
 public class JWTFilter extends BasicHttpAuthenticationFilter implements Filter {
 
     @Override
+    protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String authorization = httpServletRequest.getHeader("Authorization");
+        return StringUtils.isNotBlank(authorization);
+    }
+
+    @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String authorization = httpServletRequest.getHeader("Authorization");
-        log.info("判断用户是否想要登录x：{}",authorization);
+        log.info("判断用户是否想要登录x：{}", authorization);
         JWTToken token = new JWTToken(authorization);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(token);
@@ -34,11 +41,16 @@ public class JWTFilter extends BasicHttpAuthenticationFilter implements Filter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        if (isLoginAttempt(request, response)) {
+        Boolean isLoginAttempt = isLoginAttempt(request, response);
+        if (isLoginAttempt) {
             try {
                 executeLogin(request, response);
             } catch (Exception e) {
-                response401(request, response);
+                try {
+                    response401(request, response);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         return true;
@@ -62,12 +74,9 @@ public class JWTFilter extends BasicHttpAuthenticationFilter implements Filter {
     /**
      * 将非法请求跳转到 /401
      */
-    private void response401(ServletRequest req, ServletResponse resp) {
-        try {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
-            httpServletResponse.sendRedirect("/401");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
+    private void response401(ServletRequest req, ServletResponse resp) throws IOException {
+        HttpServletResponse httpResponse = (HttpServletResponse) resp;
+        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        httpResponse.getWriter().write("login error");
     }
 }
