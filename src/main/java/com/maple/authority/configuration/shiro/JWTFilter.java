@@ -23,7 +23,11 @@ public class JWTFilter extends BasicHttpAuthenticationFilter implements Filter {
         if (StringUtils.isNotBlank(httpServletRequest.getHeader("Authorization"))) {
 
         }
-        this.executeLogin(request, response);
+        try {
+            this.executeLogin(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return super.isAccessAllowed(request, response, mappedValue);
     }
