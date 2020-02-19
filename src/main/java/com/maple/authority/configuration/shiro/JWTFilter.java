@@ -78,5 +78,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) resp;
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpResponse.getWriter().write("login error");
+        httpResponse.getWriter().close();
     }
 }

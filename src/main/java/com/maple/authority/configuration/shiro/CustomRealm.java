@@ -29,4 +29,9 @@ public class CustomRealm extends AuthorizingRealm {
         String token = (String) authenticationToken.getCredentials();
         return new SimpleAuthenticationInfo(token, token, "userRealm");
     }
+
+    @Override
+    public boolean supports(AuthenticationToken token) {
+        return token instanceof JWTToken;
+    }
 }
