@@ -30,6 +30,12 @@ public class CustomRealm extends AuthorizingRealm {
         return new SimpleAuthenticationInfo(token, token, "userRealm");
     }
 
+    /**
+     * 这里如果不使用shiro自带的AuthenticationToken，例如我使用了JWTToken实现自定义，需要重写，不然会报错
+     *
+     * @param token
+     * @return
+     */
     @Override
     public boolean supports(AuthenticationToken token) {
         return token instanceof JWTToken;
