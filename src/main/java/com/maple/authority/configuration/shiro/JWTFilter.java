@@ -1,5 +1,6 @@
 package com.maple.authority.configuration.shiro;
 
+import com.maple.authority.exception.AuthorityException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
@@ -17,9 +18,24 @@ import java.io.IOException;
 
 import static com.maple.authority.configuration.BeanInitConfig.jwtProperties;
 
+
+/**
+ * 1.鉴权拦截先走isAccessAllowed方法，判断是否需要鉴权逻辑
+ * 2.如果需要鉴权，走executeLogin方法，这个方法执行到getSubject(request, response).login(token);这段代码，会跳转到shiro中CustomRealm的doGetAuthenticationInfo逻辑
+ * 3.是否需要鉴权，可以直接在ShiroConfig中shiroFilterFactoryBean中添加
+ * 注意：在这个方法中拦截器只校验token，具体的人员权限验证在CustomRealm的doGetAuthenticationInfo中处理
+ */
 @Slf4j
 public class JWTFilter extends BasicHttpAuthenticationFilter implements Filter {
 
+    /**
+     * 这里重写此方法，可以更加灵活的判断什么时候需要鉴权
+     * 现在是header中有Authorization且有值时需要鉴权
+     *
+     * @param request
+     * @param response
+     * @return
+     */
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
